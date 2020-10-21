@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NETCore.MailKit.Extensions;
+using NETCore.MailKit.Infrastructure.Internal;
 
 namespace IdentityExample
 {
@@ -31,6 +33,7 @@ namespace IdentityExample
                 s.UseSqlServer(Configuration.GetConnectionString("SqlConnectionString"));
             });
 
+            /*Identity Configure*/
             services.AddIdentity<IdentityUser, IdentityRole>(config =>
             {
                 config.Password.RequiredLength = 4;
@@ -38,13 +41,23 @@ namespace IdentityExample
                 config.Password.RequireNonAlphanumeric = false;
                 config.Password.RequireUppercase = false;
                 config.Password.RequireLowercase= false;
+                config.SignIn.RequireConfirmedEmail = true; //Kayýt için Email aktif edildi. Email confirm edilmezse giriþ yapmaz.
+
             }).AddEntityFrameworkStores<AppDbContext>() // hangi db ile iletiþim kuracaðýný belirledik.
               .AddDefaultTokenProviders();
 
+            /*Identity LoginPath and cookie name update*/
             services.ConfigureApplicationCookie(o =>
             {
                 o.LoginPath = "/Home/Login";
                 o.Cookie.Name = "Identity.Cookie";
+            });
+
+            /*Email Configuration*/
+            var mailKitOption = Configuration.GetSection("Email").Get<MailKitOptions>();
+            services.AddMailKit(config =>
+            {
+                config.UseMailKit(mailKitOption);
             });
 
             services.AddControllersWithViews();
