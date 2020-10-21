@@ -23,6 +23,12 @@ namespace AuthenticationAuthorization
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            /*[Authorize] etiketi için Kimlik doðrulama yönlendirmesi*/
+            services.AddAuthentication("CookieAuth")
+                .AddCookie("CookieAuth", config => {
+                    config.Cookie.Name = "Authentication.Cookie";
+                    config.LoginPath = "/Home/Authenticate";
+                });
             services.AddControllersWithViews();
         }
 
@@ -44,7 +50,11 @@ namespace AuthenticationAuthorization
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //who are you?
+            app.UseAuthentication();
+
+            //are you allowed?
+            app.UseAuthorization();// UseRoutingin altýnda olmalý yoksa çalýþmaz. 
 
             app.UseEndpoints(endpoints =>
             {

@@ -6,32 +6,59 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AuthenticationAuthorization.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 
 namespace AuthenticationAuthorization.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController()
         {
-            _logger = logger;
+            
         }
 
         public IActionResult Index()
         {
             return View();
         }
-
+        [Authorize]
         public IActionResult Privacy()
         {
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        public IActionResult Authenticate()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            /*Kimlik Doğrulama(Kimlik Cookie tutuluyor)*/
+            /*burası kullanıcı giriş yaptıktan sonra Dbden gelen bilgilerle doldurulabilir*/
+
+            /*Kimlik için Claimler oluşturulur.*/
+            var userClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name,"Yavuz"),
+                new Claim(ClaimTypes.Email,"yavuz@deneme.com"),
+                new Claim("Test.Claim","Heyyyy!!")
+            };
+            var licenseClaims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name,"Ali"),
+                new Claim("DrivingLicende","B")
+            };
+
+            /*Kimlik Oluşturuluyor*/
+            var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
+            var licenseIdentity = new ClaimsIdentity(licenseClaims, "license Identity");
+
+            /*UserPrincipal birden çok kimlik içerebilir. Google, Facebook gibi*/
+            var userPrincipal = new ClaimsPrincipal(new[] { userIdentity,licenseIdentity });
+
+            /*HttpContext'e bilgiler gönderilir*/
+            HttpContext.SignInAsync(userPrincipal);
+
+            return View("Index");
         }
+
     }
 }
