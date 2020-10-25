@@ -23,10 +23,24 @@ namespace AuthenticationAuthorization.Controllers
         {
             return View();
         }
+
         [Authorize]
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        /*Policy Sağlamayan kullanıcalar giremez*/
+        [Authorize(Policy = "Claim.DoB")]
+        public IActionResult PrivacyPolicy()
+        {
+            return View("Privacy");
+        }
+
+        [Authorize(Roles= "Admin")]
+        public IActionResult PrivacyRole()
+        {
+            return View("Privacy");
         }
 
         public IActionResult Authenticate()
@@ -39,7 +53,9 @@ namespace AuthenticationAuthorization.Controllers
             {
                 new Claim(ClaimTypes.Name,"Yavuz"),
                 new Claim(ClaimTypes.Email,"yavuz@deneme.com"),
-                new Claim("Test.Claim","Heyyyy!!")
+                new Claim("Test.Claim","Heyyyy!!"),
+                new Claim(ClaimTypes.DateOfBirth,"11/11/2000"),//Policy için doğum tarihi ekleniyor
+                new Claim(ClaimTypes.Role,"Admin")
             };
             var licenseClaims = new List<Claim>
             {

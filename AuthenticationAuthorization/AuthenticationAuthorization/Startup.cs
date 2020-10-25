@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Basics.AuthorizationRequirements;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +32,27 @@ namespace AuthenticationAuthorization
                     config.Cookie.Name = "Authentication.Cookie";
                     config.LoginPath = "/Home/Authenticate";
                 });
+
+            /*Kullanýcý yetkilendirme politikasý*/
+            services.AddAuthorization(config => {
+                //var defaultAuthBuilder = new AuthorizationPolicyBuilder();
+                //var defaultAuthPolicy = defaultAuthBuilder
+                //.RequireAuthenticatedUser()
+                //.RequireClaim(ClaimTypes.DateOfBirth)/*Kullanýcýlarýn doðum tarihinin doðrulanmasý gerekiyor. Yoksa AccessDenied verir*/
+                //.Build();
+                //config.DefaultPolicy = defaultAuthPolicy;
+
+                //config.AddPolicy("Claim.DoB", policyBuilder =>
+                //{
+                //    policyBuilder.RequireClaim(ClaimTypes.DateOfBirth); 
+                //});
+
+                config.AddPolicy("Claim.DoB", policyBuilder =>
+                {
+                    policyBuilder.RequireCustomClaim(ClaimTypes.DateOfBirth);
+                });
+            });
+            services.AddScoped<IAuthorizationHandler, CustomRequireClaimHandler>();
             services.AddControllersWithViews();
         }
 
