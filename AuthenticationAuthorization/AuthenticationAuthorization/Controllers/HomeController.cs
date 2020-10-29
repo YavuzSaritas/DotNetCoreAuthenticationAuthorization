@@ -14,11 +14,12 @@ namespace AuthenticationAuthorization.Controllers
 {
     public class HomeController : Controller
     {
-        public HomeController()
-        {
-            
-        }
+        private readonly IAuthorizationService _authorizationService;
 
+        public HomeController(IAuthorizationService authorizationService)
+        {
+            _authorizationService = authorizationService;
+        }
         public IActionResult Index()
         {
             return View();
@@ -37,12 +38,14 @@ namespace AuthenticationAuthorization.Controllers
             return View("Privacy");
         }
 
-        [Authorize(Roles= "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult PrivacyRole()
         {
             return View("Privacy");
         }
 
+        /*AllowAnonymous : Global Filtre dışına kalır.*/
+        [AllowAnonymous]
         public IActionResult Authenticate()
         {
             /*Kimlik Doğrulama(Kimlik Cookie tutuluyor)*/
@@ -68,11 +71,24 @@ namespace AuthenticationAuthorization.Controllers
             var licenseIdentity = new ClaimsIdentity(licenseClaims, "license Identity");
 
             /*UserPrincipal birden çok kimlik içerebilir. Google, Facebook gibi*/
-            var userPrincipal = new ClaimsPrincipal(new[] { userIdentity,licenseIdentity });
+            var userPrincipal = new ClaimsPrincipal(new[] { userIdentity, licenseIdentity });
 
             /*HttpContext'e bilgiler gönderilir*/
             HttpContext.SignInAsync(userPrincipal);
 
+            return View("Index");
+        }
+        public async Task<IActionResult> DoStuff()
+        {
+            //we are doing stuff
+            /*işlem sırısında yetki kontrolü*/
+            var builder = new AuthorizationPolicyBuilder("Schema");
+            var customPolicy = builder.RequireClaim("Hello").Build();
+            var authResult = await _authorizationService.AuthorizeAsync(User, "Claim.DoB",customPolicy);
+            if (authResult.Succeeded)
+            {
+
+            }
             return View("Index");
         }
 

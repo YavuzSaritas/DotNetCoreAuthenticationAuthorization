@@ -4,10 +4,14 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Basics.AuthorizationRequirements;
+using Basics.Controllers;
+using Basics.Transformer;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -52,8 +56,21 @@ namespace AuthenticationAuthorization
                     policyBuilder.RequireCustomClaim(ClaimTypes.DateOfBirth);
                 });
             });
+
             services.AddScoped<IAuthorizationHandler, CustomRequireClaimHandler>();
-            services.AddControllersWithViews();
+            services.AddScoped<IAuthorizationHandler, CookieJarAuthorizationHandler>();
+            services.AddScoped<IClaimsTransformation, ClaimTransformation>();
+
+            
+            services.AddControllersWithViews(config => {
+                /*Global Authorization Filter*/
+                var defaultAuthBuilder = new AuthorizationPolicyBuilder();
+                var defaultAuthPolicy = defaultAuthBuilder
+                .RequireAuthenticatedUser()
+                .Build();
+
+                //config.Filters.Add(new AuthorizeFilter(defaultAuthPolicy));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
