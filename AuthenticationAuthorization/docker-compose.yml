@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  identityexample:
+    image: ${DOCKER_REGISTRY-}identityexample
+    build:
+      context: .
+      dockerfile: IdentityExample/Dockerfile

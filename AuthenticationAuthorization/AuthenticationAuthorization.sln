@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30503.244
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Basics", "AuthenticationAuthorization\Basics.csproj", "{45C75FBB-B4F3-4596-98C5-1901466458D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Basics", "AuthenticationAuthorization\Basics.csproj", "{45C75FBB-B4F3-4596-98C5-1901466458D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityExample", "IdentityExample\IdentityExample.csproj", "{DB9BAD44-B7C7-47A4-9008-D3A6323EF89A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityExample", "IdentityExample\IdentityExample.csproj", "{DB9BAD44-B7C7-47A4-9008-D3A6323EF89A}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{582618C6-A62A-40F3-98D9-08C9886CFDB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{DB9BAD44-B7C7-47A4-9008-D3A6323EF89A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB9BAD44-B7C7-47A4-9008-D3A6323EF89A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB9BAD44-B7C7-47A4-9008-D3A6323EF89A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{582618C6-A62A-40F3-98D9-08C9886CFDB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{582618C6-A62A-40F3-98D9-08C9886CFDB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{582618C6-A62A-40F3-98D9-08C9886CFDB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{582618C6-A62A-40F3-98D9-08C9886CFDB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
